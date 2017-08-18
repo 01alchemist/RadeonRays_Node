@@ -1,0 +1,203 @@
+<Material name="diffuse" id="0" twosided="true" type="simple" bxdf="lambert">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="0 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="glass" id="1595362880" twosided="false" type="blend" blend_type="1">
+    <Input name="base_material" type="material" value="1595363200"/>
+    <Input name="top_material" type="material" value="1595364160"/>
+    <Input name="ior" type="float4" value="1.45 1.45 1.45 1.45"/>
+</Material>
+
+<Material name="glass-refract" id="1595363200" twosided="false" type="simple" bxdf="ideal_refract">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.45 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="glass-reflect" id="1595364160" twosided="false" type="simple" bxdf="ideal_reflect">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="asphalt" id="1" twosided="true" type="blend" blend_type="1">
+    <Input name="base_material" type="material" value="2"/>
+    <Input name="top_material" type="material" value="3"/>
+    <Input name="ior" type="float4" value="1.33 1.33 1.33 1.33"/>
+</Material>
+
+<Material name="asphalt-diffuse" id="2" twosided="false" type="simple" bxdf="lambert">
+    <Input name="albedo" type="texture" value="asph.jpg"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="asphalt-reflect" id="3" twosided="false" type="simple" bxdf="microfacet_ggx">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="roughness" type="float4" value="0.1 0 0 0"/>
+</Material>
+
+<Material name="white_diffuse" id="4" twosided="true" type="simple" bxdf="lambert">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="metal_glossy" id="5" twosided="true" type="simple" bxdf="microfacet_ggx">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="roughness" type="float4" value="0.1 0 0 0"/>
+</Material>
+
+<Material name="mirror_dark" id="6" twosided="true" type="simple" bxdf="ideal_reflect">
+    <Input name="albedo" type="float4" value="1.0 1.0 1.0 1"/>
+    <Input name="ior" type="float4" value="2.6 0 0 0"/>
+    <Input name="fresnel" type="float4" value="1 0 0 0"/>
+</Material>
+
+
+<Material name="glass_green" id="7" twosided="false" type="blend" blend_type="1">
+    <Input name="base_material" type="material" value="8"/>
+    <Input name="top_material" type="material" value="1595364160"/>
+    <Input name="ior" type="float4" value="1.33 1.33 1.33 1.33"/>
+</Material>
+
+<Material name="glass_green-refract" id="8" twosided="false" type="simple" bxdf="ideal_refract">
+    <Input name="albedo" type="float4" value="0.7 1 0.85 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="grey_diffuse" id="10" twosided="true" type="simple" bxdf="lambert">
+    <Input name="albedo" type="float4" value="0.6 0.6 0.6 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+
+<Material name="red_plastic" id="13" twosided="true" type="blend" blend_type="1">
+    <Input name="base_material" type="material" value="14"/>
+    <Input name="top_material" type="material" value="15"/>
+    <Input name="ior" type="float4" value="1.7 1.7 1.7 1.7"/>
+</Material>
+
+<Material name="red_plastic-diffuse" id="14" twosided="false" type="simple" bxdf="lambert">
+    <Input name="albedo" type="float4" value="0.7 0 0 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="red_plastic-reflect" id="15" twosided="false" type="simple" bxdf="ideal_reflect">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+</Material>
+
+<Material name="gold" id="16" twosided="true" type="simple" bxdf="microfacet_beckmann">
+    <Input name="albedo" type="float4" value="0.92 0.72 0.2 1"/>
+    <Input name="ior" type="float4" value="10.6 0 0 0"/>
+    <Input name="fresnel" type="float4" value="1 0 0 0"/>
+	<Input name="roughness" type="float4" value="0.01 0 0 0"/>
+	<Input name="normal" type="texture" value="metal_rough.png"/>
+</Material>
+
+<Material name="glass_rough" id="17" twosided="false" type="blend" blend_type="1">
+    <Input name="base_material" type="material" value="18"/>
+    <Input name="top_material" type="material" value="19"/>
+    <Input name="ior" type="float4" value="1.33 1.33 1.33 1.33"/>
+</Material>
+
+<Material name="glass_rough-refract" id="18" twosided="false" type="simple" bxdf="microfacet_refraction_ggx">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="roughness" type="texture" value="rmap.jpg"/>
+</Material>
+
+<Material name="glass_rough-reflect" id="19" twosided="false" type="simple" bxdf="microfacet_ggx">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="roughness" type="texture" value="rmap.jpg"/>
+</Material>
+
+
+<Material name="metal_rusted" id="20" twosided="true" type="blend" blend_type="2">
+    <Input name="base_material" type="material" value="21"/>
+    <Input name="top_material" type="material" value="22"/>
+    <Input name="weight" type="texture" value="rust_bump.jpg"/>
+</Material>
+
+<Material name="metal_rusted-base" id="21" twosided="false" type="simple" bxdf="microfacet_ggx">
+    <Input name="albedo" type="texture" value="metal_rough.png"/>
+    <Input name="ior" type="float4" value="10.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="1 0 0 0"/>
+	<Input name="roughness" type="float4" value="0.05 0 0 0"/>
+	<Input name="normal" type="texture" value="metal_rough.png"/>
+</Material>
+
+<Material name="metal_rusted-rust" id="22" twosided="false" type="simple" bxdf="lambert">
+    <Input name="albedo" type="texture" value="rust.jpg"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="normal" type="texture" value="rust_bump.jpg"/>
+</Material>
+
+<Material name="brick" id="23" twosided="true" type="simple" bxdf="microfacet_ggx">
+    <Input name="albedo" type="texture" value="Brick_Damaged.jpg"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="roughness" type="float4" value="0.5 0 0 0"/>
+	<Input name="normal" type="texture" value="Brick_Damaged_bw.jpg"/>
+</Material>
+
+<Material name="blue_plastic" id="24" twosided="true" type="blend" blend_type="1">
+    <Input name="base_material" type="material" value="25"/>
+    <Input name="top_material" type="material" value="26"/>
+    <Input name="ior" type="float4" value="2.7 2.7 2.7 1.7"/>
+</Material>
+
+<Material name="blue_plastic-diffuse" id="25" twosided="false" type="simple" bxdf="lambert">
+    <Input name="albedo" type="float4" value="0.5 0.5 0.9 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="normal" type="texture" value="scratchmap.png"/>
+</Material>
+
+<Material name="blue_plastic-reflect" id="26" twosided="false" type="simple" bxdf="ideal_reflect">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="normal" type="texture" value="scratchmap.png"/>
+</Material>
+
+<Material name="carbon" id="27" twosided="true" type="blend" blend_type="1">
+    <Input name="base_material" type="material" value="28"/>
+    <Input name="top_material" type="material" value="29"/>
+    <Input name="ior" type="float4" value="1.7 1.7 1.7 1.7"/>
+</Material>
+
+<Material name="carbon-diffuse" id="28" twosided="false" type="simple" bxdf="microfacet_ggx">
+    <Input name="albedo" type="texture" value="CarbonFiber.jpg"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="roughness" type="float4" value="0.05 0 0 0"/>
+	<Input name="normal" type="texture" value="CarbonFiber_bump.jpg"/>
+</Material>
+
+<Material name="carbon-reflect" id="29" twosided="false" type="simple" bxdf="ideal_reflect">
+    <Input name="albedo" type="float4" value="1 1 1 1"/>
+    <Input name="ior" type="float4" value="1.33 0 0 0"/>
+    <Input name="fresnel" type="float4" value="0 0 0 0"/>
+	<Input name="normal" type="texture" value="CarbonFiber_bump.jpg"/>
+</Material>
+
+
+
+
+

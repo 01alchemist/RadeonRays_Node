@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
+        "lib": ["dom", "es2015"],
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "declaration": false,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "removeComments": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "allowSyntheticDefaultImports": false,
+        "allowJs": true,
+        "sourceMap": true,
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {}
+    },
+    "files": ["src/index.ts"],
+    "exclude": ["node_modules", "dist"]
+}

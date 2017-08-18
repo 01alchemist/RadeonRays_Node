@@ -1,0 +1,5 @@
+sdk/baikal
+sdk/BaikalBench
+build
+node_modules
+.vscode
