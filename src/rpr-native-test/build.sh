@@ -1,0 +1,1 @@
+g++ create-context.cc -L/Users/n.vinayakan/workspace/RadeonRays_Node/sdk/baikal/Bin/Release/x64 -I ../../sdk/baikal/

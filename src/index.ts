@@ -1,18 +1,12 @@
 import { RadeonRaysContext } from './api/radeon-rays-context';
+const radeonrays = require('../build/Release/radeonrays.node');
 
-export class RadeonProRender {
+const contexts:RadeonRaysContext[] = [];
 
-    static contexts:RadeonRaysContext[];
+export function createContext(){
+    return radeonrays.createContext();
+}
 
-    private static instance:RadeonProRender;
-    static getInstance():RadeonProRender {
-        if(RadeonProRender.instance === undefined){
-            RadeonProRender.instance = new RadeonProRender();
-        }
-        return RadeonProRender.instance;
-    }
-    private constructor() {
-
-    }
-
+export default {
+    createContext
 }

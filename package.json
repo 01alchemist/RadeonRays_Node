@@ -1,13 +1,41 @@
 {
-  "name": "radeon-rays",
-  "version": "1.0.0",
-  "description": "Node.js bindings for RadeonRays_SDK",
-  "main": "index.js",
-  "repository": "https://github.com/01alchemist/RadeonRays_Node.git",
-  "author": "Nidin Vinayakan <01@01alchemist.com>",
-  "license": "MIT",
-  "dependencies": {
-    "bindings": "^1.3.0",
-    "wrtc": "^0.0.62"
-  }
+    "name": "radeon-rays",
+    "version": "1.0.0",
+    "description": "Node.js bindings for RadeonRays_SDK",
+    "main": "index.js",
+    "repository": "https://github.com/01alchemist/RadeonRays_Node.git",
+    "author": "Nidin Vinayakan <01@01alchemist.com>",
+    "license": "MIT",
+    "scripts": {
+        "build": "node-gyp build && webpack --config webpack.config.js --progress --colors",
+        "watch": "webpack --config webpack.config.js --progress --colors --watch",
+        "test": "yarn build && node ./node_modules/jest/bin/jest.js --config jest.json",
+        "tdd": "node ./node_modules/jest/bin/jest.js --config jest.json --watch",
+        "autogypi": "autogypi",
+        "node-gyp": "node-gyp",
+        "emcc-path": "emcc-path",
+        "copyasm": "copyasm",
+        "ndts": "ndts"
+    },
+    "dependencies": {
+        "bindings": "^1.3.0",
+        "wrtc": "^0.0.62"
+    },
+    "devDependencies": {
+        "@types/jest": "^20.0.7",
+        "@types/node": "^8.0.24",
+        "autogypi": "^0.2.2",
+        "copy-webpack-plugin": "^4.0.1",
+        "jest": "^20.0.4",
+        "nbind": "^0.3.13",
+        "node-loader": "^0.6.0",
+        "raw-loader": "^0.5.1",
+        "ts-jest": "^20.0.10",
+        "ts-loader": "^2.3.3",
+        "tslint": "^5.6.0",
+        "tslint-loader": "^3.5.3",
+        "typescript": "^2.4.2",
+        "webpack": "^3.5.5",
+        "webpack-node-externals": "^1.6.0"
+    }
 }
