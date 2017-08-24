@@ -19,7 +19,7 @@
         "libRpr64.dylib"
       ],
 			"sources": [
-				"src/core/wrapper-nan.cc"
+				"src/core/wrap.cc"
 			]
 		}
 	],

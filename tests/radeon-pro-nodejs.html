@@ -1,0 +1,39 @@
+<html>
+
+<head>
+    <title>RGBA Viewer</title>
+</head>
+
+<body>
+    <canvas id="stage">
+    </canvas>
+</body>
+<script>
+    const width = 800;
+    const height = 600;
+    async function loadRGBA(url) {
+        const res = await fetch(url);
+        const buffer = await res.arrayBuffer();
+        const rgba = new Float32Array(buffer);
+        const canvas = document.getElementById("stage");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        let imageData = ctx.getImageData(0, 0, width, height)
+        let rgba_8bit = imageData.data;
+        for (let i = 0; i < rgba_8bit.length; i += 4) {
+            const j = rgba_8bit.length - i;
+            rgba_8bit[j + 0] = 255 * rgba[i + 0];
+            rgba_8bit[j + 1] = 255 * rgba[i + 1];
+            rgba_8bit[j + 2] = 255 * rgba[i + 2];
+            rgba_8bit[j + 3] = 255 * rgba[i + 3];
+        }
+        console.log(rgba_8bit.length);
+        console.log(rgba.length);
+        ctx.putImageData(imageData, 0, 0);
+    }
+    loadRGBA("output/dof.rgba");
+
+</script>
+
+</html>
