@@ -1316,6 +1316,8 @@ namespace RadeonRaysNode {
         rpr_light light = (void *) (long) info[0]->NumberValue();
         rpr_float iangle = static_cast<float>(info[1]->NumberValue());
         rpr_float oangle = static_cast<float>(info[2]->NumberValue());
+        // rpr_float iangle = M_PI_4;
+        // rpr_float oangle = M_PI * 2.f / 3.f;
         rpr_int status = rprSpotLightSetConeShape(light, iangle, oangle);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1327,7 +1329,7 @@ namespace RadeonRaysNode {
             result->Set(
                 New<v8::String>("message").ToLocalChecked(),
                 New<v8::String>("SpotLightSetConeShape done").ToLocalChecked()
-            );  
+            );
         } else {
             result->Set(
                 New<v8::String>("message").ToLocalChecked(),

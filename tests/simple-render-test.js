@@ -8,8 +8,9 @@ const createDOFMesh = require('./create-dof-mesh');
 const glmatrix = require("gl-matrix")
 const mat4 = glmatrix.mat4;
 
-const M_PI_2 = 1.5707963705062848 // pi/2
-const M_PI_4 = 0.785398163397448309616; // pi/4
+const M_PI = 3.141592653589793;
+const M_PI_2 = 1.5707963705062848; // pi/2
+const M_PI_4 = 0.7853981633974483; // pi/4
 
 function simpleRenderTest() {
     let context, matsys, scene;
@@ -268,17 +269,18 @@ function simpleRenderTest() {
     spotLight = result.light;
 
     let spotLightm = matrix.mul(
-        matrix.translation([0, 1, 0]),
+        matrix.translation([0, 16, 0]),
         matrix.rotation_x(-M_PI_2),
     );
     console.log("  matrix: [ " + spotLightm.join(", ") + " ]");
     result = rpr.LightSetTransform(spotLight, true, spotLightm);
     console.log(result);
     assert(result.status == RPR.RPR_SUCCESS);
-    result = rpr.SpotLightSetConeShape(spotLight, M_PI_4, Math.PI * 2 / 3);
+    console.log(M_PI_4, M_PI * 2 / 3);
+    result = rpr.SpotLightSetConeShape(spotLight, M_PI_4, M_PI * 2 / 3);
     console.log(result);
     assert(result.status == RPR.RPR_SUCCESS);
-    result = rpr.SpotLightSetRadiantPower3f(spotLight, 350, 350, 350);
+    result = rpr.SpotLightSetRadiantPower3f(spotLight, 350/100, 350/100, 350/100);
     console.log(result);
     assert(result.status == RPR.RPR_SUCCESS);
     result = rpr.SceneAttachLight(scene, spotLight);
@@ -435,16 +437,16 @@ function createSphere(context, lat, lon, r, c) {
     let it = 0;
     for (let j = 1; j < lat - 1; j++)
         for (let i = 0; i < lon; i++) {
-            let theta = j / (lat - 1) * Math.PI;
-            let phi = i / (lon - 1) * Math.PI * 2;
+            let theta = j / (lat - 1) * M_PI;
+            let phi = i / (lon - 1) * M_PI * 2;
             vertices[iv] = r * Math.sin(theta) * Math.cos(phi) + c.x;
             vertices[iv + 1] = r * Math.cos(theta) + c.y;
             vertices[iv + 2] = r * -Math.sin(theta) * Math.sin(phi) + c.z;
             normals[iv] = Math.sin(theta) * Math.cos(phi);
             normals[iv + 1] = Math.cos(theta);
             normals[iv + 2] = -Math.sin(theta) * Math.sin(phi);
-            uvs[it] = phi / (2 * Math.PI);
-            uvs[it + 1].y = theta / (Math.PI);
+            uvs[it] = phi / (2 * M_PI);
+            uvs[it + 1].y = theta / (M_PI);
             ++t;
             iv += 3;
             it + 2;
