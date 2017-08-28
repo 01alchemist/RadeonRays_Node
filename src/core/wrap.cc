@@ -606,43 +606,45 @@ namespace RadeonRaysNode {
         }
         info.GetReturnValue().Set(result);
     }
+/* It is unclear layout of texcoords and its related data
+    NAN_METHOD(ContextCreateMeshEx)
+    {
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_float const * vertices = (float*) node::Buffer::Data(info[1]->ToObject());
+        size_t num_vertices = info[2]->Uint32Value();
+        rpr_int vertex_stride = info[3]->Int32Value();
 
-    // NAN_METHOD(ContextCreateMeshEx)
-    // {
-    //     rpr_context context = (void*) (long) info[0]->NumberValue();
-    //     rpr_float const * vertices = (float const *) TypedArrayContents<float> data(info[1]);
-    //     size_t num_vertices = info[2]->Uint32Value();
-    //     rpr_int vertex_stride = info[3]->Int32Value();
-    //     rpr_float const * normals = (float const *) TypedArrayContents<float> data(info[4]);
-    //     size_t num_normals = info[5]->Uint32Value();
-    //     rpr_int normal_stride = info[6]->Int32Value();
-    //     rpr_int const * perVertexFlag
-    //     size_t num_perVertexFlags
-    //     rpr_int perVertexFlag_stride
-    //     rpr_int numberOfTexCoordLayers
-    //     rpr_float const ** texcoords
-    //     size_t * num_texcoords
-    //     rpr_int * texcoord_stride
-    //     rpr_int const * vertex_indices
-    //     rpr_int vidx_stride
-    //     rpr_int const * normal_indices
-    //     rpr_int nidx_stride
-    //     rpr_int const ** texcoord_indices
-    //     rpr_int * tidx_stride
-    //     rpr_int const * num_face_vertices
-    //     size_t num_faces
-    //     rpr_shape * out_mesh
+        rpr_float const * normals = (float*) node::Buffer::Data(info[4]->ToObject());
+        size_t num_normals = info[5]->Uint32Value();
+        rpr_int normal_stride = info[6]->Int32Value();
 
-    //     rpr_int status = rprContextCreateMeshEx(context, vertices, num_vertices, vertex_stride, normals, num_normals, normal_stride, perVertexFlag, num_perVertexFlags, perVertexFlag_stride, numberOfTexCoordLayers, texcoords, num_texcoords, texcoord_stride, vertex_indices, vidx_stride, normal_indices, nidx_stride, texcoord_indices, tidx_stride, num_face_vertices, num_faces, out_mesh);
+        rpr_int const * perVertexFlag = (int*) node::Buffer::Data(info[7]->ToObject());
+        size_t num_perVertexFlags = info[8]->Uint32Value();
+        rpr_int perVertexFlag_stride = info[9]->Int32Value();
+        rpr_int numberOfTexCoordLayers = info[10]->Int32Value();
+        rpr_float const * texcoords = (float*) node::Buffer::Data(info[11]->ToObject());
+        size_t num_texcoords = info[12]->Uint32Value();
+        rpr_int texcoord_stride = info[13]->Int32Value();
+        rpr_int const * vertex_indices = (int*) node::Buffer::Data(info[14]->ToObject());
+        rpr_int vidx_stride = info[15]->Int32Value();
+        rpr_int const * normal_indices = (int*) node::Buffer::Data(info[16]->ToObject());
+        rpr_int nidx_stride = info[17]->Int32Value();
+        rpr_int const * texcoord_indices = (int*) node::Buffer::Data(info[18]->ToObject());
+        rpr_int tidx_stride = info[19]->Int32Value();
+        rpr_int const * num_face_vertices = (int*) node::Buffer::Data(info[20]->ToObject());
+        size_t num_faces = info[21]->Uint32Value();
+        rpr_shape out_mesh;
 
-    //     v8::Local<v8::Object> result = New<v8::Object>();
-    //     result->Set(
-    //         New<v8::String>("status").ToLocalChecked(),
-    //         New<v8::Number>(static_cast<int>(status))
-    //     );
-    //     info.GetReturnValue().Set(result);
-    // }
+        rpr_int status = rprContextCreateMeshEx(context, vertices, num_vertices, vertex_stride, normals, num_normals, normal_stride, perVertexFlag, num_perVertexFlags, perVertexFlag_stride, numberOfTexCoordLayers, &texcoords, &num_texcoords, &texcoord_stride, vertex_indices, vidx_stride, normal_indices, nidx_stride, &texcoord_indices, &tidx_stride, num_face_vertices, num_faces, out_mesh);
 
+        v8::Local<v8::Object> result = New<v8::Object>();
+        result->Set(
+            New<v8::String>("status").ToLocalChecked(),
+            New<v8::Number>(static_cast<int>(status))
+        );
+        info.GetReturnValue().Set(result);
+    } 
+*/
     NAN_METHOD(ContextCreateCamera)
     {
         rpr_context context = (void *) (long) info[0]->NumberValue();
@@ -718,7 +720,7 @@ namespace RadeonRaysNode {
         if(status == RPR_SUCCESS){
             result->Set(
                 New<v8::String>("size").ToLocalChecked(),
-                New<v8::Number>(static_cast<unsigned int>(size_ret))
+                New<v8::Number>(static_cast<double>((long)size_ret))
             );
         } else {
             result->Set(
@@ -1123,7 +1125,7 @@ namespace RadeonRaysNode {
         if(status == RPR_SUCCESS){
             result->Set(
                 New<v8::String>("size").ToLocalChecked(),
-                New<v8::Number>(static_cast<int>(size_ret))
+                New<v8::Number>(static_cast<double>((long)size_ret))
             );
         } else {
             result->Set(
@@ -1473,14 +1475,30 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(ShapeGetInfo)
     {
-        //(rpr_shape arg0, rpr_shape_info arg1, size_t arg2, void * arg3, size_t * arg4
-        rpr_int status = rprShapeGetInfo(arg0, arg1, arg2, arg3, arg4);
+        rpr_shape mesh = (void *) (long) info[0]->NumberValue();
+        rpr_shape_info shape_info = info[1]->Uint32Value();
+        size_t size = info[2]->Uint32Value();
+        void * data = (void *) node::Buffer::Data(info[3]->ToObject());
+        size_t size_ret;
+
+        rpr_int status = rprShapeGetInfo(mesh, shape_info, size, data, &size_ret);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("MeshGetInfo done").ToLocalChecked()
+            );  
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error MeshGetInfo").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
@@ -1489,7 +1507,7 @@ namespace RadeonRaysNode {
         rpr_shape mesh = (void *) (long) info[0]->NumberValue();
         rpr_mesh_info mesh_info = info[1]->Uint32Value();
         size_t size = info[2]->Uint32Value();
-        void * data = node::Buffer:Data(info[3]->ToObject());
+        void * data = node::Buffer::Data(info[3]->ToObject());
         size_t size_ret;
 
         rpr_int status = rprMeshGetInfo(mesh, mesh_info, size, data, &size_ret);
@@ -1499,6 +1517,17 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("MeshGetInfo done").ToLocalChecked()
+            );  
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error MeshGetInfo").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
@@ -1518,13 +1547,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("MeshPolygonGetInfo done").ToLocalChecked()
+            );  
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error MeshPolygonGetInfo").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(InstanceGetBaseShape)
     {
         rpr_shape shape = (void *) (long) info[0]->NumberValue();
-        rpr_shape out_shape
+        rpr_shape out_shape;
+
         rpr_int status = rprInstanceGetBaseShape(shape, &out_shape);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1532,6 +1573,17 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("InstanceGetBaseShape done").ToLocalChecked()
+            );  
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error InstanceGetBaseShape").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
@@ -1694,10 +1746,14 @@ namespace RadeonRaysNode {
         }
         info.GetReturnValue().Set(result);
     }
-/*
+
     NAN_METHOD(DirectionalLightSetRadiantPower3f)
     {
-        //(rpr_light light, rpr_float r, rpr_float g, rpr_float b
+        rpr_light light = (void *) (long) info[0]->NumberValue();
+        rpr_float r = static_cast<float>(info[1]->NumberValue());
+        rpr_float g = static_cast<float>(info[2]->NumberValue());
+        rpr_float b = static_cast<float>(info[3]->NumberValue());
+
         rpr_int status = rprDirectionalLightSetRadiantPower3f(light, r, g, b);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1721,7 +1777,9 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(DirectionalLightSetShadowSoftness)
     {
-        //(rpr_light light, rpr_float coeff
+        rpr_light light = (void *) (long) info[0]->NumberValue();
+        rpr_float coeff =  info[1]->NumberValue();
+
         rpr_int status = rprDirectionalLightSetShadowSoftness(light, coeff);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1734,20 +1792,35 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(ContextCreateEnvironmentLight)
     {
-        rpr_context context = (void*) (long) info[0]->NumberValue();, rpr_light * out_light
-        rpr_int status = rprContextCreateEnvironmentLight(context, out_light);
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_light out_light;
+
+        rpr_int status = rprContextCreateEnvironmentLight(context, &out_light);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("light").ToLocalChecked(),
+                New<v8::Number>(static_cast<double>((long)out_light))
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error ContextCreateEnvironmentLight").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(EnvironmentLightSetImage)
     {
-        //(rpr_light env_light, rpr_image image
+        rpr_light env_light = (void *) (long) info[0]->NumberValue();
+        rpr_image image = (void *) (long) info[1]->NumberValue();
+
         rpr_int status = rprEnvironmentLightSetImage(env_light, image);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1755,12 +1828,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("EnvironmentLightSetIntensityScale done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error EnvironmentLightSetIntensityScale").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(EnvironmentLightSetIntensityScale)
     {
-        //(rpr_light env_light, rpr_float intensity_scale
+        rpr_light env_light = (void *) (long) info[0]->NumberValue();
+        rpr_float intensity_scale = info[1]->NumberValue();
+
         rpr_int status = rprEnvironmentLightSetIntensityScale(env_light, intensity_scale);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1768,12 +1854,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("EnvironmentLightSetIntensityScale done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error EnvironmentLightSetIntensityScale").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(EnvironmentLightAttachPortal)
     {
-        //(rpr_light env_light, rpr_shape portal
+        rpr_light env_light = (void *) (long) info[0]->NumberValue();
+        rpr_shape portal = (void*) (long) info[1]->NumberValue();
+
         rpr_int status = rprEnvironmentLightAttachPortal(env_light, portal);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1781,12 +1880,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("EnvironmentLightAttachPortal done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error EnvironmentLightAttachPortal").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(EnvironmentLightDetachPortal)
     {
-        //(rpr_light env_light, rpr_shape portal
+        rpr_light env_light = (void *) (long) info[0]->NumberValue();
+        rpr_shape portal = (void*) (long) info[1]->NumberValue();
+
         rpr_int status = rprEnvironmentLightDetachPortal(env_light, portal);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1794,25 +1906,51 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("EnvironmentLightDetachPortal done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error EnvironmentLightDetachPortal").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(ContextCreateSkyLight)
     {
-        rpr_context context = (void*) (long) info[0]->NumberValue();, rpr_light * out_light
-        rpr_int status = rprContextCreateSkyLight(context, out_light);
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_light out_light;
+
+        rpr_int status = rprContextCreateSkyLight(context, &out_light);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("light").ToLocalChecked(),
+                New<v8::Number>(static_cast<double>((long)out_light))
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error ContextCreateSkyLight").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(SkyLightSetTurbidity)
     {
-        //(rpr_light skylight, rpr_float turbidity
+        rpr_light skylight = (void*) (long) info[0]->NumberValue();
+        rpr_float turbidity = info[1]->NumberValue();
+
         rpr_int status = rprSkyLightSetTurbidity(skylight, turbidity);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1820,12 +1958,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("SkyLightSetTurbidity done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SkyLightSetTurbidity").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(SkyLightSetAlbedo)
     {
-        //(rpr_light skylight, rpr_float albedo
+        rpr_light skylight = (void*) (long) info[0]->NumberValue();
+        rpr_float albedo = info[1]->NumberValue();
+
         rpr_int status = rprSkyLightSetAlbedo(skylight, albedo);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1833,12 +1984,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("SkyLightSetAlbedo done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SkyLightSetAlbedo").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(SkyLightSetScale)
     {
-        //(rpr_light skylight, rpr_float scale
+        rpr_light skylight = (void*) (long) info[0]->NumberValue();
+        rpr_float scale = info[1]->NumberValue();
+
         rpr_int status = rprSkyLightSetScale(skylight, scale);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1846,12 +2010,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("SkyLightSetScale done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SkyLightSetScale").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(SkyLightAttachPortal)
     {
-        //(rpr_light skylight, rpr_shape portal
+        rpr_light skylight = (void*) (long) info[0]->NumberValue();
+        rpr_shape portal = (void*) (long) info[1]->NumberValue();
+
         rpr_int status = rprSkyLightAttachPortal(skylight, portal);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1859,12 +2036,25 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("SkyLightAttachPortal done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SkyLightAttachPortal").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(SkyLightDetachPortal)
     {
-        //(rpr_light skylight, rpr_shape portal
+        rpr_light skylight = (void*) (long) info[0]->NumberValue();
+        rpr_shape portal = (void*) (long) info[1]->NumberValue();
+
         rpr_int status = rprSkyLightDetachPortal(skylight, portal);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1872,25 +2062,53 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("SkyLightDetachPortal done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SkyLightDetachPortal").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(ContextCreateIESLight)
     {
-        rpr_context context = (void*) (long) info[0]->NumberValue();, rpr_light * light
-        rpr_int status = rprContextCreateIESLight(context, light);
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_light out_light;
+
+        rpr_int status = rprContextCreateIESLight(context, &out_light);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("light").ToLocalChecked(),
+                New<v8::Number>(static_cast<double>((long)out_light))
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error ContextCreateIESLight").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(IESLightSetRadiantPower3f)
     {
-        //(rpr_light light, rpr_float r, rpr_float g, rpr_float b
+        rpr_light light = (void *) (long) info[0]->NumberValue();
+        rpr_float r = static_cast<float>(info[1]->NumberValue());
+        rpr_float g = static_cast<float>(info[2]->NumberValue());
+        rpr_float b = static_cast<float>(info[3]->NumberValue());
+
         rpr_int status = rprIESLightSetRadiantPower3f(light, r, g, b);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1898,12 +2116,27 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("IESLightSetRadiantPower3f done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error IESLightSetRadiantPower3f").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(IESLightSetImageFromFile)
     {
-        //(rpr_light env_light, rpr_char const * imagePath, rpr_int nx, rpr_int ny
+        rpr_light env_light = (void *) (long) info[0]->NumberValue();
+        rpr_char const * imagePath = ToCString(info[1]);
+        rpr_int nx = info[2]->Int32Value();
+        rpr_int ny = info[3]->Int32Value();
+
         rpr_int status = rprIESLightSetImageFromFile(env_light, imagePath, nx, ny);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1911,12 +2144,27 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("IESLightSetImageFromFile done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error IESLightSetImageFromFile").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(IESLightSetImageFromIESdata)
     {
-        //(rpr_light env_light, rpr_char const * iesData, rpr_int nx, rpr_int ny
+        rpr_light env_light = (void *) (long) info[0]->NumberValue();
+        rpr_char const * iesData = ToCString(info[1]);
+        rpr_int nx = info[2]->Int32Value();
+        rpr_int ny = info[3]->Int32Value();
+
         rpr_int status = rprIESLightSetImageFromIESdata(env_light, iesData, nx, ny);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1924,25 +2172,53 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("IESLightSetImageFromIESdata done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error IESLightSetImageFromIESdata").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(LightGetInfo)
     {
-        //(rpr_light light, rpr_light_info info, size_t size, void * data, size_t * size_ret
-        rpr_int status = rprLightGetInfo(light, info, size, data, size_ret);
+        rpr_light light = (void *) (long) info[0]->NumberValue();
+        rpr_light_info light_info = info[1]->Uint32Value();
+        size_t size = info[2]->Uint32Value();
+        void * data = (void *) node::Buffer::Data(info[3]->ToObject());
+        size_t size_ret;
+
+        rpr_int status = rprLightGetInfo(light, light_info, size, data, &size_ret);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("size").ToLocalChecked(),
+                New<v8::Number>(static_cast<double>((long)size_ret))
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error LightGetInfo").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
 
     NAN_METHOD(SceneClear)
     {
-        //(rpr_scene scene
+        rpr_scene scene = (void *) (long) info[0]->NumberValue();
+
         rpr_int status = rprSceneClear(scene);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -1950,9 +2226,20 @@ namespace RadeonRaysNode {
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("SceneClear done").ToLocalChecked()
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SceneClear").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
-    */
+    
     NAN_METHOD(SceneAttachShape)
     {
         rpr_scene scene = (void *) (long) info[0]->NumberValue();
@@ -2057,11 +2344,16 @@ namespace RadeonRaysNode {
         info.GetReturnValue().Set(result);
     }
 
-/*
+
     NAN_METHOD(SceneGetInfo)
     {
-        //(rpr_scene scene, rpr_scene_info info, size_t size, void * data, size_t * size_ret
-        rpr_int status = rprSceneGetInfo(scene, info, size, data, size_ret);
+        rpr_scene scene = (void *) (long) info[0]->NumberValue();
+        rpr_scene_info scene_info = info[1]->Uint32Value();
+        size_t size = info[2]->Uint32Value();
+        void * data = node::Buffer::Data(info[3]->ToObject());
+        size_t size_ret;
+
+        rpr_int status = rprSceneGetInfo(scene, scene_info, size, data, &size_ret);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
@@ -2073,8 +2365,11 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(SceneGetEnvironmentOverride)
     {
-        //(rpr_scene scene, rpr_environment_override overrride, rpr_light * out_light
-        rpr_int status = rprSceneGetEnvironmentOverride(scene, overrride, out_light);
+        rpr_scene scene = (void *) (long) info[0]->NumberValue();
+        rpr_environment_override overrride = info[1]->Uint32Value();
+        rpr_light out_light;
+
+        rpr_int status = rprSceneGetEnvironmentOverride(scene, overrride, &out_light);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
@@ -2086,7 +2381,10 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(SceneSetEnvironmentOverride)
     {
-        //(rpr_scene scene, rpr_environment_override overrride, rpr_light light
+        rpr_scene scene = (void *) (long) info[0]->NumberValue();
+        rpr_environment_override overrride = info[1]->Uint32Value();
+        rpr_light light = (void *) (long) info[2]->NumberValue();
+
         rpr_int status = rprSceneSetEnvironmentOverride(scene, overrride, light);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2099,7 +2397,9 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(SceneSetBackgroundImage)
     {
-        //(rpr_scene scene, rpr_image image
+        rpr_scene scene = (void *) (long) info[0]->NumberValue();
+        rpr_image image = (void *) (long) info[1]->NumberValue();
+
         rpr_int status = rprSceneSetBackgroundImage(scene, image);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2112,17 +2412,30 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(SceneGetBackgroundImage)
     {
-        //(rpr_scene scene, rpr_image * out_image
-        rpr_int status = rprSceneGetBackgroundImage(scene, out_image);
+        rpr_scene scene = (void *) (long) info[0]->NumberValue();
+        rpr_image out_image;
+
+        rpr_int status = rprSceneGetBackgroundImage(scene, &out_image);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("image").ToLocalChecked(),
+                New<v8::Number>(static_cast<double>((long)out_image))
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SceneGetBackgroundImage").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
-*/
+
     NAN_METHOD(SceneSetCamera)
     {
         rpr_scene scene = (void *) (long) info[0]->NumberValue();
@@ -2173,20 +2486,33 @@ namespace RadeonRaysNode {
     //     }
     //     info.GetReturnValue().Set(result);
     // }
-/*
+
     NAN_METHOD(SceneGetCamera)
     {
-        //(rpr_scene scene, rpr_camera * out_camera
-        rpr_int status = rprSceneGetCamera(scene, out_camera);
+        rpr_scene scene = (void *) (long) info[0]->NumberValue();
+        rpr_camera out_camera;
+
+        rpr_int status = rprSceneGetCamera(scene, &out_camera);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
             New<v8::String>("status").ToLocalChecked(),
             New<v8::Number>(static_cast<int>(status))
         );
+        if(status == RPR_SUCCESS) {
+            result->Set(
+                New<v8::String>("camera").ToLocalChecked(),
+                New<v8::Number>(static_cast<double>((long)out_camera))
+            );
+        } else {
+            result->Set(
+                New<v8::String>("message").ToLocalChecked(),
+                New<v8::String>("Error SceneGetCamera").ToLocalChecked()
+            );
+        }
         info.GetReturnValue().Set(result);
     }
-*/
+
     NAN_METHOD(FrameBufferGetInfo)
     {
         rpr_framebuffer framebuffer = (void *) (long) info[0]->NumberValue();
@@ -2206,7 +2532,7 @@ namespace RadeonRaysNode {
         if(status == RPR_SUCCESS) {
             result->Set(
                 New<v8::String>("length").ToLocalChecked(),
-                New<v8::Number>(static_cast<unsigned int>(size_ret))
+                New<v8::Number>(static_cast<double>((long)size_ret))
             );
         } else {
             result->Set(
@@ -2267,10 +2593,14 @@ namespace RadeonRaysNode {
         }
         info.GetReturnValue().Set(result);
     }
-/*
+
     NAN_METHOD(ContextResolveFrameBuffer)
     {
-        rpr_context context = (void*) (long) info[0]->NumberValue();, rpr_framebuffer src_frame_buffer, rpr_framebuffer dst_frame_buffer, rpr_bool normalizeOnly
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_framebuffer src_frame_buffer = (void*) (long) info[1]->NumberValue();
+        rpr_framebuffer dst_frame_buffer = (void*) (long) info[2]->NumberValue();
+        rpr_bool normalizeOnly = info[3]->BooleanValue();
+
         rpr_int status = rprContextResolveFrameBuffer(context, src_frame_buffer, dst_frame_buffer, normalizeOnly);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2280,7 +2610,7 @@ namespace RadeonRaysNode {
         );
         info.GetReturnValue().Set(result);
     }
-    */
+    
     NAN_METHOD(ContextCreateMaterialSystem)
     {
         rpr_context in_context = (void *) (long) info[0]->NumberValue();
@@ -2377,10 +2707,13 @@ namespace RadeonRaysNode {
         }
         info.GetReturnValue().Set(result);
     }
-/*
+
     NAN_METHOD(MaterialNodeSetInputU)
     {
-        //(rpr_material_node in_node, rpr_char const * in_input, rpr_uint in_value
+        rpr_material_node in_node = (void *) (long) info[0]->NumberValue();
+        rpr_char const * in_input = ToCString(info[1]);
+        rpr_uint in_value = info[2]->Uint32Value();
+
         rpr_int status = rprMaterialNodeSetInputU(in_node, in_input, in_value);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2393,7 +2726,10 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(MaterialNodeSetInputImageData)
     {
-        //(rpr_material_node in_node, rpr_char const * in_input, rpr_image image
+        rpr_material_node in_node = (void *) (long) info[0]->NumberValue();
+        rpr_char const * in_input = ToCString(info[1]);
+        rpr_image image = (void *) (long) info[2]->NumberValue();
+        
         rpr_int status = rprMaterialNodeSetInputImageData(in_node, in_input, image);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2406,8 +2742,13 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(MaterialNodeGetInfo)
     {
-        //(rpr_material_node in_node, rpr_material_node_info in_info, size_t in_size, void * in_data, size_t * out_size
-        rpr_int status = rprMaterialNodeGetInfo(in_node, in_info, in_size, in_data, out_size);
+        rpr_material_node in_node = (void *) (long) info[0]->NumberValue();
+        rpr_material_node_info in_info = info[1]->Uint32Value();
+        size_t in_size = info[2]->Uint32Value();
+        void * in_data = node::Buffer::Data(info[3]->ToObject());
+        size_t out_size;
+
+        rpr_int status = rprMaterialNodeGetInfo(in_node, in_info, in_size, in_data, &out_size);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
@@ -2419,8 +2760,14 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(MaterialNodeGetInputInfo)
     {
-        //(rpr_material_node in_node, rpr_int in_input_idx, rpr_material_node_input_info in_info, size_t in_size, void * in_data, size_t * out_size
-        rpr_int status = rprMaterialNodeGetInputInfo(in_node, in_input_idx, in_info, in_size, in_data, out_size);
+        rpr_material_node in_node = (void *) (long) info[0]->NumberValue();
+        rpr_int in_input_idx = info[1]->Int32Value();
+        rpr_material_node_input_info in_info = info[2]->Uint32Value();
+        size_t in_size = info[3]->Uint32Value();
+        void * in_data = node::Buffer::Data(info[4]->ToObject());
+        size_t out_size;
+
+        rpr_int status = rprMaterialNodeGetInputInfo(in_node, in_input_idx, in_info, in_size, in_data, &out_size);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
@@ -2429,7 +2776,7 @@ namespace RadeonRaysNode {
         );
         info.GetReturnValue().Set(result);
     }
-*/
+
     NAN_METHOD(ObjectDelete)
     {
         void * obj = (void *) (long) info[0]->NumberValue();
@@ -2454,10 +2801,12 @@ namespace RadeonRaysNode {
         }
         info.GetReturnValue().Set(result);
     }
-/*
+
     NAN_METHOD(ObjectSetName)
     {
-        //(void * node, rpr_char const * name
+        void * node = (void *) (long) info[0]->NumberValue();
+        rpr_char const * name = ToCString(info[1]);
+
         rpr_int status = rprObjectSetName(node, name);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2470,8 +2819,11 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(ContextCreatePostEffect)
     {
-        rpr_context context = (void*) (long) info[0]->NumberValue();, rpr_post_effect_type type, rpr_post_effect * out_effect
-        rpr_int status = rprContextCreatePostEffect(context, type, out_effect);
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_post_effect_type type = info[1]->Uint32Value();
+        rpr_post_effect out_effect;
+
+        rpr_int status = rprContextCreatePostEffect(context, type, &out_effect);
 
         v8::Local<v8::Object> result = New<v8::Object>();
         result->Set(
@@ -2483,7 +2835,9 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(ContextAttachPostEffect)
     {
-        rpr_context context = (void*) (long) info[0]->NumberValue();, rpr_post_effect effect
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_post_effect effect = (void *) (long) info[1]->NumberValue();
+
         rpr_int status = rprContextAttachPostEffect(context, effect);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2496,7 +2850,9 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(ContextDetachPostEffect)
     {
-        rpr_context context = (void*) (long) info[0]->NumberValue();, rpr_post_effect effect
+        rpr_context context = (void*) (long) info[0]->NumberValue();
+        rpr_post_effect effect = (void *) (long) info[1]->NumberValue();
+
         rpr_int status = rprContextDetachPostEffect(context, effect);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2509,7 +2865,10 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(PostEffectSetParameter1u)
     {
-        //(rpr_post_effect effect, rpr_char const * name = ToCString(info[1]); rpr_uint x
+        rpr_post_effect effect = (void *) (long) info[0]->NumberValue();
+        rpr_char const * name = ToCString(info[1]);
+        rpr_uint x = info[2]->Uint32Value();
+
         rpr_int status = rprPostEffectSetParameter1u(effect, name, x);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2522,7 +2881,10 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(PostEffectSetParameter1f)
     {
-        //(rpr_post_effect effect, rpr_char const * name = ToCString(info[1]); rpr_float x
+        rpr_post_effect effect = (void *) (long) info[0]->NumberValue();
+        rpr_char const * name = ToCString(info[1]);
+        rpr_float x = info[2]->NumberValue();
+
         rpr_int status = rprPostEffectSetParameter1f(effect, name, x);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2535,7 +2897,12 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(PostEffectSetParameter3f)
     {
-        //(rpr_post_effect effect, rpr_char const * name = ToCString(info[1]); rpr_float x, rpr_float y, rpr_float z
+        rpr_post_effect effect = (void *) (long) info[0]->NumberValue();
+        rpr_char const * name = ToCString(info[1]);
+        rpr_float x = info[2]->NumberValue();
+        rpr_float y = info[3]->NumberValue();
+        rpr_float z = info[4]->NumberValue();
+
         rpr_int status = rprPostEffectSetParameter3f(effect, name, x, y, z);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2548,7 +2915,13 @@ namespace RadeonRaysNode {
 
     NAN_METHOD(PostEffectSetParameter4f)
     {
-        //(rpr_post_effect effect, rpr_char const * name = ToCString(info[1]); rpr_float x, rpr_float y, rpr_float z, rpr_float w
+        rpr_post_effect effect = (void *) (long) info[0]->NumberValue();
+        rpr_char const * name = ToCString(info[1]); 
+        rpr_float x = info[2]->NumberValue();
+        rpr_float y = info[3]->NumberValue();
+        rpr_float z = info[4]->NumberValue();
+        rpr_float w = info[5]->NumberValue();
+
         rpr_int status = rprPostEffectSetParameter4f(effect, name, x, y, z, w);
 
         v8::Local<v8::Object> result = New<v8::Object>();
@@ -2558,7 +2931,7 @@ namespace RadeonRaysNode {
         );
         info.GetReturnValue().Set(result);
     } 
-    */
+    
     NAN_METHOD(debugString)
     {
         const char * debug_str = ToCString(info[0]);
@@ -2583,143 +2956,131 @@ namespace RadeonRaysNode {
         );
         info.GetReturnValue().Set(result);
     }
-    // NAN_METHOD(debugObject)
-    // {
-    //     Nan::MaybeLocal<v8::Object> obj = Nan::To<v8::Object>(info[0]).ToLocalChecked();
-    //     v8::Local<v8::Object> result = New<v8::Object>();
-    //     v8::Local<v8::String> key = New("key").ToLocalChecked();
-    //     result->Set(
-    //         New<v8::String>("result").ToLocalChecked(),
-    //         Get(obj, key).ToLocalChecked()
-    //     );
-    //     info.GetReturnValue().Set(result);
-    // }
 
     NAN_MODULE_INIT(Initialize) {  
-      NAN_EXPORT(target, debugString);
-      NAN_EXPORT(target, debugTypedArray);
-    //   NAN_EXPORT(target, debugObject);
-      NAN_EXPORT(target, RegisterPlugin);
-      NAN_EXPORT(target, CreateContext);
-    //   NAN_EXPORT(target, ContextSetActivePlugin);
-      NAN_EXPORT(target, ContextGetInfo);
-    //   NAN_EXPORT(target, ContextGetParameterInfo);
-    //   NAN_EXPORT(target, ContextGetAOV);
-      NAN_EXPORT(target, ContextSetAOV);
-      NAN_EXPORT(target, ContextSetScene);
-    //   NAN_EXPORT(target, ContextGetScene);
-      NAN_EXPORT(target, ContextSetParameter1u);
-    //   NAN_EXPORT(target, ContextSetParameter1f);
-    //   NAN_EXPORT(target, ContextSetParameter3f);
-    //   NAN_EXPORT(target, ContextSetParameter4f);
-    //   NAN_EXPORT(target, ContextSetParameterString);
-      NAN_EXPORT(target, ContextRender);
-    //   NAN_EXPORT(target, ContextRenderTile);
-    //   NAN_EXPORT(target, ContextClearMemory);
-    //   NAN_EXPORT(target, ContextCreateImage);
-    //   NAN_EXPORT(target, ContextCreateImageFromFile);
-      NAN_EXPORT(target, ContextCreateScene);
-    //   NAN_EXPORT(target, ContextCreateInstance);
-      NAN_EXPORT(target, ContextCreateMesh);
-    //   NAN_EXPORT(target, ContextCreateMeshEx);
-      NAN_EXPORT(target, ContextCreateCamera);
-      NAN_EXPORT(target, ContextCreateFrameBuffer);
-    //   NAN_EXPORT(target, CameraGetInfo);
-      NAN_EXPORT(target, CameraSetFocalLength);
-      NAN_EXPORT(target, CameraSetFocusDistance);
-      NAN_EXPORT(target, CameraSetTransform);
-    //   NAN_EXPORT(target, CameraSetSensorSize);
-      NAN_EXPORT(target, CameraLookAt);
-      NAN_EXPORT(target, CameraSetFStop);
-    //   NAN_EXPORT(target, CameraSetApertureBlades);
-    //   NAN_EXPORT(target, CameraSetExposure);
-      NAN_EXPORT(target, CameraSetMode);
-    //   NAN_EXPORT(target, CameraSetOrthoWidth);
-    //   NAN_EXPORT(target, CameraSetFocalTilt);
-    //   NAN_EXPORT(target, CameraSetIPD);
-    //   NAN_EXPORT(target, CameraSetLensShift);
-    //   NAN_EXPORT(target, CameraSetOrthoHeight);
-    //   NAN_EXPORT(target, ImageGetInfo);
-    //   NAN_EXPORT(target, ImageSetWrap);
-      NAN_EXPORT(target, ShapeSetTransform);
-    //   NAN_EXPORT(target, ShapeSetSubdivisionFactor);
-    //   NAN_EXPORT(target, ShapeSetSubdivisionCreaseWeight);
-    //   NAN_EXPORT(target, ShapeSetSubdivisionBoundaryInterop);
-    //   NAN_EXPORT(target, ShapeSetDisplacementScale);
-    //   NAN_EXPORT(target, ShapeSetObjectGroupID);
-    //   NAN_EXPORT(target, ShapeSetDisplacementImage);
-      NAN_EXPORT(target, ShapeSetMaterial);
-    //   NAN_EXPORT(target, ShapeSetMaterialOverride);
-    //   NAN_EXPORT(target, ShapeSetVolumeMaterial);
-    //   NAN_EXPORT(target, ShapeSetLinearMotion);
-    //   NAN_EXPORT(target, ShapeSetAngularMotion);
-    //   NAN_EXPORT(target, ShapeSetVisibility);
-    //   NAN_EXPORT(target, ShapeSetVisibilityInSpecular);
-    //   NAN_EXPORT(target, ShapeSetShadowCatcher);
-    //   NAN_EXPORT(target, ShapeSetShadow);
-      NAN_EXPORT(target, LightSetTransform);
-    //   NAN_EXPORT(target, ShapeGetInfo);
-    //   NAN_EXPORT(target, MeshGetInfo);
-    //   NAN_EXPORT(target, MeshPolygonGetInfo);
-    //   NAN_EXPORT(target, InstanceGetBaseShape);
-      NAN_EXPORT(target, ContextCreatePointLight);
-      NAN_EXPORT(target, PointLightSetRadiantPower3f);
-      NAN_EXPORT(target, ContextCreateSpotLight);
-      NAN_EXPORT(target, SpotLightSetRadiantPower3f);
-      NAN_EXPORT(target, SpotLightSetConeShape);
-      NAN_EXPORT(target, ContextCreateDirectionalLight);
-    //   NAN_EXPORT(target, DirectionalLightSetRadiantPower3f);
-    //   NAN_EXPORT(target, DirectionalLightSetShadowSoftness);
-    //   NAN_EXPORT(target, ContextCreateEnvironmentLight);
-    //   NAN_EXPORT(target, EnvironmentLightSetImage);
-    //   NAN_EXPORT(target, EnvironmentLightSetIntensityScale);
-    //   NAN_EXPORT(target, EnvironmentLightAttachPortal);
-    //   NAN_EXPORT(target, EnvironmentLightDetachPortal);
-    //   NAN_EXPORT(target, ContextCreateSkyLight);
-    //   NAN_EXPORT(target, SkyLightSetTurbidity);
-    //   NAN_EXPORT(target, SkyLightSetAlbedo);
-    //   NAN_EXPORT(target, SkyLightSetScale);
-    //   NAN_EXPORT(target, SkyLightAttachPortal);
-    //   NAN_EXPORT(target, SkyLightDetachPortal);
-    //   NAN_EXPORT(target, ContextCreateIESLight);
-    //   NAN_EXPORT(target, IESLightSetRadiantPower3f);
-    //   NAN_EXPORT(target, IESLightSetImageFromFile);
-    //   NAN_EXPORT(target, IESLightSetImageFromIESdata);
-    //   NAN_EXPORT(target, LightGetInfo);
-    //   NAN_EXPORT(target, SceneClear);
-      NAN_EXPORT(target, SceneAttachShape);
-      NAN_EXPORT(target, SceneDetachShape);
-      NAN_EXPORT(target, SceneAttachLight);
-      NAN_EXPORT(target, SceneDetachLight);
-    //   NAN_EXPORT(target, SceneGetInfo);
-    //   NAN_EXPORT(target, SceneGetEnvironmentOverride);
-    //   NAN_EXPORT(target, SceneSetEnvironmentOverride);
-    //   NAN_EXPORT(target, SceneSetBackgroundImage);
-    //   NAN_EXPORT(target, SceneGetBackgroundImage);
-      NAN_EXPORT(target, SceneSetCamera);
-    //   NAN_EXPORT(target, SceneGetCamera);
-    // NAN_EXPORT(target, CompileScene);
-      NAN_EXPORT(target, FrameBufferGetInfo);
-      NAN_EXPORT(target, FrameBufferClear);
-      NAN_EXPORT(target, FrameBufferSaveToFile);
-    //   NAN_EXPORT(target, ContextResolveFrameBuffer);
-      NAN_EXPORT(target, ContextCreateMaterialSystem);
-      NAN_EXPORT(target, MaterialSystemCreateNode);
-      NAN_EXPORT(target, MaterialNodeSetInputN);
-      NAN_EXPORT(target, MaterialNodeSetInputF);
-    //   NAN_EXPORT(target, MaterialNodeSetInputU);
-    //   NAN_EXPORT(target, MaterialNodeSetInputImageData);
-    //   NAN_EXPORT(target, MaterialNodeGetInfo);
-    //   NAN_EXPORT(target, MaterialNodeGetInputInfo);
-      NAN_EXPORT(target, ObjectDelete);
-    //   NAN_EXPORT(target, ObjectSetName);
-    //   NAN_EXPORT(target, ContextCreatePostEffect);
-    //   NAN_EXPORT(target, ContextAttachPostEffect);
-    //   NAN_EXPORT(target, ContextDetachPostEffect);
-    //   NAN_EXPORT(target, PostEffectSetParameter1u);
-    //   NAN_EXPORT(target, PostEffectSetParameter1f);
-    //   NAN_EXPORT(target, PostEffectSetParameter3f);
-    //   NAN_EXPORT(target, PostEffectSetParameter4f);
+        NAN_EXPORT(target, debugString);
+        NAN_EXPORT(target, debugTypedArray);
+        NAN_EXPORT(target, RegisterPlugin);
+        NAN_EXPORT(target, CreateContext);
+        NAN_EXPORT(target, ContextSetActivePlugin);
+        NAN_EXPORT(target, ContextGetInfo);
+        NAN_EXPORT(target, ContextGetParameterInfo);
+        NAN_EXPORT(target, ContextGetAOV);
+        NAN_EXPORT(target, ContextSetAOV);
+        NAN_EXPORT(target, ContextSetScene);
+        NAN_EXPORT(target, ContextGetScene);
+        NAN_EXPORT(target, ContextSetParameter1u);
+        NAN_EXPORT(target, ContextSetParameter1f);
+        NAN_EXPORT(target, ContextSetParameter3f);
+        NAN_EXPORT(target, ContextSetParameter4f);
+        NAN_EXPORT(target, ContextSetParameterString);
+        NAN_EXPORT(target, ContextRender);
+        NAN_EXPORT(target, ContextRenderTile);
+        NAN_EXPORT(target, ContextClearMemory);
+        NAN_EXPORT(target, ContextCreateImage);
+        NAN_EXPORT(target, ContextCreateImageFromFile);
+        NAN_EXPORT(target, ContextCreateScene);
+        NAN_EXPORT(target, ContextCreateInstance);
+        NAN_EXPORT(target, ContextCreateMesh);
+        // NAN_EXPORT(target, ContextCreateMeshEx);
+        NAN_EXPORT(target, ContextCreateCamera);
+        NAN_EXPORT(target, ContextCreateFrameBuffer);
+        NAN_EXPORT(target, CameraGetInfo);
+        NAN_EXPORT(target, CameraSetFocalLength);
+        NAN_EXPORT(target, CameraSetFocusDistance);
+        NAN_EXPORT(target, CameraSetTransform);
+        NAN_EXPORT(target, CameraSetSensorSize);
+        NAN_EXPORT(target, CameraLookAt);
+        NAN_EXPORT(target, CameraSetFStop);
+        NAN_EXPORT(target, CameraSetApertureBlades);
+        NAN_EXPORT(target, CameraSetExposure);
+        NAN_EXPORT(target, CameraSetMode);
+        NAN_EXPORT(target, CameraSetOrthoWidth);
+        NAN_EXPORT(target, CameraSetFocalTilt);
+        NAN_EXPORT(target, CameraSetIPD);
+        NAN_EXPORT(target, CameraSetLensShift);
+        NAN_EXPORT(target, CameraSetOrthoHeight);
+        NAN_EXPORT(target, ImageGetInfo);
+        NAN_EXPORT(target, ImageSetWrap);
+        NAN_EXPORT(target, ShapeSetTransform);
+        NAN_EXPORT(target, ShapeSetSubdivisionFactor);
+        NAN_EXPORT(target, ShapeSetSubdivisionCreaseWeight);
+        NAN_EXPORT(target, ShapeSetSubdivisionBoundaryInterop);
+        NAN_EXPORT(target, ShapeSetDisplacementScale);
+        NAN_EXPORT(target, ShapeSetObjectGroupID);
+        NAN_EXPORT(target, ShapeSetDisplacementImage);
+        NAN_EXPORT(target, ShapeSetMaterial);
+        NAN_EXPORT(target, ShapeSetMaterialOverride);
+        NAN_EXPORT(target, ShapeSetVolumeMaterial);
+        NAN_EXPORT(target, ShapeSetLinearMotion);
+        NAN_EXPORT(target, ShapeSetAngularMotion);
+        NAN_EXPORT(target, ShapeSetVisibility);
+        NAN_EXPORT(target, ShapeSetVisibilityInSpecular);
+        NAN_EXPORT(target, ShapeSetShadowCatcher);
+        NAN_EXPORT(target, ShapeSetShadow);
+        NAN_EXPORT(target, LightSetTransform);
+        NAN_EXPORT(target, ShapeGetInfo);
+        NAN_EXPORT(target, MeshGetInfo);
+        NAN_EXPORT(target, MeshPolygonGetInfo);
+        NAN_EXPORT(target, InstanceGetBaseShape);
+        NAN_EXPORT(target, ContextCreatePointLight);
+        NAN_EXPORT(target, PointLightSetRadiantPower3f);
+        NAN_EXPORT(target, ContextCreateSpotLight);
+        NAN_EXPORT(target, SpotLightSetRadiantPower3f);
+        NAN_EXPORT(target, SpotLightSetConeShape);
+        NAN_EXPORT(target, ContextCreateDirectionalLight);
+        NAN_EXPORT(target, DirectionalLightSetRadiantPower3f);
+        NAN_EXPORT(target, DirectionalLightSetShadowSoftness);
+        NAN_EXPORT(target, ContextCreateEnvironmentLight);
+        NAN_EXPORT(target, EnvironmentLightSetImage);
+        NAN_EXPORT(target, EnvironmentLightSetIntensityScale);
+        NAN_EXPORT(target, EnvironmentLightAttachPortal);
+        NAN_EXPORT(target, EnvironmentLightDetachPortal);
+        NAN_EXPORT(target, ContextCreateSkyLight);
+        NAN_EXPORT(target, SkyLightSetTurbidity);
+        NAN_EXPORT(target, SkyLightSetAlbedo);
+        NAN_EXPORT(target, SkyLightSetScale);
+        NAN_EXPORT(target, SkyLightAttachPortal);
+        NAN_EXPORT(target, SkyLightDetachPortal);
+        NAN_EXPORT(target, ContextCreateIESLight);
+        NAN_EXPORT(target, IESLightSetRadiantPower3f);
+        NAN_EXPORT(target, IESLightSetImageFromFile);
+        NAN_EXPORT(target, IESLightSetImageFromIESdata);
+        NAN_EXPORT(target, LightGetInfo);
+        NAN_EXPORT(target, SceneClear);
+        NAN_EXPORT(target, SceneAttachShape);
+        NAN_EXPORT(target, SceneDetachShape);
+        NAN_EXPORT(target, SceneAttachLight);
+        NAN_EXPORT(target, SceneDetachLight);
+        NAN_EXPORT(target, SceneGetInfo);
+        NAN_EXPORT(target, SceneGetEnvironmentOverride);
+        NAN_EXPORT(target, SceneSetEnvironmentOverride);
+        NAN_EXPORT(target, SceneSetBackgroundImage);
+        NAN_EXPORT(target, SceneGetBackgroundImage);
+        NAN_EXPORT(target, SceneSetCamera);
+        NAN_EXPORT(target, SceneGetCamera);
+        // NAN_EXPORT(target, CompileScene);
+        NAN_EXPORT(target, FrameBufferGetInfo);
+        NAN_EXPORT(target, FrameBufferClear);
+        NAN_EXPORT(target, FrameBufferSaveToFile);
+        NAN_EXPORT(target, ContextResolveFrameBuffer);
+        NAN_EXPORT(target, ContextCreateMaterialSystem);
+        NAN_EXPORT(target, MaterialSystemCreateNode);
+        NAN_EXPORT(target, MaterialNodeSetInputN);
+        NAN_EXPORT(target, MaterialNodeSetInputF);
+        NAN_EXPORT(target, MaterialNodeSetInputU);
+        NAN_EXPORT(target, MaterialNodeSetInputImageData);
+        NAN_EXPORT(target, MaterialNodeGetInfo);
+        NAN_EXPORT(target, MaterialNodeGetInputInfo);
+        NAN_EXPORT(target, ObjectDelete);
+        NAN_EXPORT(target, ObjectSetName);
+        NAN_EXPORT(target, ContextCreatePostEffect);
+        NAN_EXPORT(target, ContextAttachPostEffect);
+        NAN_EXPORT(target, ContextDetachPostEffect);
+        NAN_EXPORT(target, PostEffectSetParameter1u);
+        NAN_EXPORT(target, PostEffectSetParameter1f);
+        NAN_EXPORT(target, PostEffectSetParameter3f);
+        NAN_EXPORT(target, PostEffectSetParameter4f);
     }
 
     NODE_MODULE(module_name, Initialize)
