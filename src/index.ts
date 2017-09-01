@@ -1,12 +1,8 @@
-import { RadeonRaysContext } from './api/radeon-rays-context';
-const radeonrays = require('../build/Release/radeonrays.node');
+import * as rpr_constants from "./core/wrapper/radeon-pro-render";
+const radeonrays_api = require('../build/Release/radeonrays.node');
 
-const contexts:RadeonRaysContext[] = [];
-
-export function createContext(){
-    return radeonrays.createContext();
+module.exports = {
+    ...radeonrays_api,
+    ...rpr_constants
 }
 
-export default {
-    createContext
-}

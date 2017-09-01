@@ -9,6 +9,7 @@
 
 namespace RadeonRaysNode {
     
+    // #define NODE_MODULE_VERSION 54
     using namespace Nan;
     using namespace RadeonRays;
 
@@ -453,7 +454,7 @@ namespace RadeonRaysNode {
         rpr_image_desc image_desc = {
             image_width, image_height, image_depth, image_row_pitch, image_slice_pitch
         };
-        void const * data = (void *) node::Buffer::Data(info[8]->ToObject());
+        void const * data = (void *) NM_54_buf(info[8]);
         rpr_image out_image;
         rpr_int status = rprContextCreateImage(context, format, &image_desc, data, &out_image);
 
@@ -556,32 +557,31 @@ namespace RadeonRaysNode {
         info.GetReturnValue().Set(result);
     }
     
-    
     NAN_METHOD(ContextCreateMesh)
     {
         rpr_context context = (void*) (long) info[0]->NumberValue();
-        float* vertices =  (float*) node::Buffer::Data(info[1]->ToObject());
+        float* vertices =  (float*) NM_54_buf(info[1]);
         size_t num_vertices = info[2]->Uint32Value();
         rpr_int vertex_stride = info[3]->Int32Value();
 
-        float* normals =  (float*) node::Buffer::Data(info[4]->ToObject());
+        float* normals =  (float*) NM_54_buf(info[4]);
         size_t num_normals = info[5]->Uint32Value();
         rpr_int normal_stride = info[6]->Int32Value();
 
-        float* texcoords = (float*) node::Buffer::Data(info[7]->ToObject());
+        float* texcoords = (float*) NM_54_buf(info[7]);
         size_t num_texcoords = info[8]->Uint32Value();
         rpr_int texcoord_stride = info[9]->Int32Value();
 
-        int* vertex_indices =  (int*) node::Buffer::Data(info[10]->ToObject());
+        int* vertex_indices =  (int*) NM_54_buf(info[10]);
         rpr_int vidx_stride = info[11]->Int32Value();
 
-        int* normal_indices =  (int*) node::Buffer::Data(info[12]->ToObject());
+        int* normal_indices =  (int*) NM_54_buf(info[12]);
         rpr_int nidx_stride = info[13]->Int32Value();
 
-        int* texcoord_indices =  (int*) node::Buffer::Data(info[14]->ToObject());
+        int* texcoord_indices =  (int*) NM_54_buf(info[14]);
         rpr_int tidx_stride = info[15]->Int32Value();
 
-        int* num_face_vertices =  (int*) node::Buffer::Data(info[16]->ToObject());
+        int* num_face_vertices =  (int*) NM_54_buf(info[16]);
         rpr_int num_faces = info[17]->Int32Value();
 
         rpr_shape out_mesh;
@@ -610,28 +610,28 @@ namespace RadeonRaysNode {
     NAN_METHOD(ContextCreateMeshEx)
     {
         rpr_context context = (void*) (long) info[0]->NumberValue();
-        rpr_float const * vertices = (float*) node::Buffer::Data(info[1]->ToObject());
+        rpr_float const * vertices = (float*) NM_54_buf(info[1]);
         size_t num_vertices = info[2]->Uint32Value();
         rpr_int vertex_stride = info[3]->Int32Value();
 
-        rpr_float const * normals = (float*) node::Buffer::Data(info[4]->ToObject());
+        rpr_float const * normals = (float*) NM_54_buf(info[4]);
         size_t num_normals = info[5]->Uint32Value();
         rpr_int normal_stride = info[6]->Int32Value();
 
-        rpr_int const * perVertexFlag = (int*) node::Buffer::Data(info[7]->ToObject());
+        rpr_int const * perVertexFlag = (int*) NM_54_buf(info[7]);
         size_t num_perVertexFlags = info[8]->Uint32Value();
         rpr_int perVertexFlag_stride = info[9]->Int32Value();
         rpr_int numberOfTexCoordLayers = info[10]->Int32Value();
-        rpr_float const * texcoords = (float*) node::Buffer::Data(info[11]->ToObject());
+        rpr_float const * texcoords = (float*) NM_54_buf(info[11]);
         size_t num_texcoords = info[12]->Uint32Value();
         rpr_int texcoord_stride = info[13]->Int32Value();
-        rpr_int const * vertex_indices = (int*) node::Buffer::Data(info[14]->ToObject());
+        rpr_int const * vertex_indices = (int*) NM_54_buf(info[14]);
         rpr_int vidx_stride = info[15]->Int32Value();
-        rpr_int const * normal_indices = (int*) node::Buffer::Data(info[16]->ToObject());
+        rpr_int const * normal_indices = (int*) NM_54_buf(info[16]);
         rpr_int nidx_stride = info[17]->Int32Value();
-        rpr_int const * texcoord_indices = (int*) node::Buffer::Data(info[18]->ToObject());
+        rpr_int const * texcoord_indices = (int*) NM_54_buf(info[18]);
         rpr_int tidx_stride = info[19]->Int32Value();
-        rpr_int const * num_face_vertices = (int*) node::Buffer::Data(info[20]->ToObject());
+        rpr_int const * num_face_vertices = (int*) NM_54_buf(info[20]);
         size_t num_faces = info[21]->Uint32Value();
         rpr_shape out_mesh;
 
@@ -707,7 +707,7 @@ namespace RadeonRaysNode {
         rpr_camera camera = (void *) (long) info[0]->NumberValue();
         rpr_camera_info camera_info = info[1]->Uint32Value();
         size_t size = info[2]->Uint32Value();
-        void * data = (void*) node::Buffer::Data(info[3]->ToObject());
+        void * data = (void*) NM_54_buf(info[3]);
         size_t size_ret;
 
         rpr_int status = rprCameraGetInfo(camera, camera_info, size, data, &size_ret);
@@ -787,7 +787,7 @@ namespace RadeonRaysNode {
     {
         rpr_camera camera = (void *) (long) info[0]->NumberValue();
         rpr_bool transpose = info[1]->BooleanValue();
-        rpr_float * transform = (float *) node::Buffer::Data(info[2]->ToObject());
+        rpr_float * transform = (float *) NM_54_buf(info[2]);
 
         rpr_int status = rprCameraSetTransform(camera, transpose, transform);
 
@@ -1112,7 +1112,7 @@ namespace RadeonRaysNode {
         rpr_image image = (void *) (long) info[0]->NumberValue();
         rpr_image_info image_info = info[1]->Uint32Value();
         size_t size = info[2]->Uint32Value();
-        void * data = (void *) node::Buffer::Data(info[3]->ToObject());
+        void * data = (void *) NM_54_buf(info[3]);
         size_t size_ret;
 
         rpr_int status = rprImageGetInfo(image, image_info, size, data, &size_ret);
@@ -1167,7 +1167,7 @@ namespace RadeonRaysNode {
         rpr_shape shape = (void *) (long) info[0]->NumberValue();
         rpr_bool transpose = info[1]->BooleanValue();
 
-        rpr_float const * transform = (float const *) node::Buffer::Data(info[2]->ToObject());
+        rpr_float const * transform = (float const *) NM_54_buf(info[2]);
 
         rpr_int status = rprShapeSetTransform(shape, transpose, transform);
 
@@ -1450,7 +1450,7 @@ namespace RadeonRaysNode {
     {
         rpr_light light = (void *) (long) info[0]->NumberValue();
         rpr_bool transpose = info[1]->BooleanValue();
-        rpr_float const * transform =  (float*) node::Buffer::Data(info[2]->ToObject());
+        rpr_float const * transform =  (float*) NM_54_buf(info[2]);
 
         rpr_int status = rprLightSetTransform(light, transpose, transform);
 
@@ -1478,7 +1478,7 @@ namespace RadeonRaysNode {
         rpr_shape mesh = (void *) (long) info[0]->NumberValue();
         rpr_shape_info shape_info = info[1]->Uint32Value();
         size_t size = info[2]->Uint32Value();
-        void * data = (void *) node::Buffer::Data(info[3]->ToObject());
+        void * data = (void *) NM_54_buf(info[3]);
         size_t size_ret;
 
         rpr_int status = rprShapeGetInfo(mesh, shape_info, size, data, &size_ret);
@@ -1507,7 +1507,7 @@ namespace RadeonRaysNode {
         rpr_shape mesh = (void *) (long) info[0]->NumberValue();
         rpr_mesh_info mesh_info = info[1]->Uint32Value();
         size_t size = info[2]->Uint32Value();
-        void * data = node::Buffer::Data(info[3]->ToObject());
+        void * data = NM_54_buf(info[3]);
         size_t size_ret;
 
         rpr_int status = rprMeshGetInfo(mesh, mesh_info, size, data, &size_ret);
@@ -1537,7 +1537,7 @@ namespace RadeonRaysNode {
         size_t polygon_index = info[1]->Uint32Value();
         rpr_mesh_polygon_info polygon_info = info[2]->Uint32Value();
         size_t size = info[3]->Uint32Value();
-        void * data = (void *) node::Buffer::Data(info[4]->ToObject());
+        void * data = (void *) NM_54_buf(info[4]);
         size_t size_ret;
 
         rpr_int status = rprMeshPolygonGetInfo(mesh, polygon_index, polygon_info, size, data, &size_ret);
@@ -2191,7 +2191,7 @@ namespace RadeonRaysNode {
         rpr_light light = (void *) (long) info[0]->NumberValue();
         rpr_light_info light_info = info[1]->Uint32Value();
         size_t size = info[2]->Uint32Value();
-        void * data = (void *) node::Buffer::Data(info[3]->ToObject());
+        void * data = (void *) NM_54_buf(info[3]);
         size_t size_ret;
 
         rpr_int status = rprLightGetInfo(light, light_info, size, data, &size_ret);
@@ -2350,7 +2350,7 @@ namespace RadeonRaysNode {
         rpr_scene scene = (void *) (long) info[0]->NumberValue();
         rpr_scene_info scene_info = info[1]->Uint32Value();
         size_t size = info[2]->Uint32Value();
-        void * data = node::Buffer::Data(info[3]->ToObject());
+        void * data = NM_54_buf(info[3]);
         size_t size_ret;
 
         rpr_int status = rprSceneGetInfo(scene, scene_info, size, data, &size_ret);
@@ -2517,7 +2517,7 @@ namespace RadeonRaysNode {
     {
         rpr_framebuffer framebuffer = (void *) (long) info[0]->NumberValue();
 
-        unsigned char*imageBuffer =  (unsigned char*) node::Buffer::Data(info[1]->ToObject());
+        unsigned char*imageBuffer =  (unsigned char*) NM_54_buf(info[1]);
         unsigned int size = info[2]->Uint32Value();
 
         size_t size_ret;
@@ -2681,7 +2681,8 @@ namespace RadeonRaysNode {
     NAN_METHOD(MaterialNodeSetInputF)
     {
         rpr_material_node in_node = (void *) (long) info[0]->NumberValue();
-        rpr_char const * in_input = ToCString(info[1]);
+        const char * debug_str = ToCString(info[1]);
+        const char * in_input = ToCString(info[1]);
         rpr_float in_value_x = (float) info[2]->NumberValue();
         rpr_float in_value_y = (float) info[3]->NumberValue();
         rpr_float in_value_z = (float) info[4]->NumberValue();
@@ -2698,6 +2699,10 @@ namespace RadeonRaysNode {
             result->Set(
                 New<v8::String>("message").ToLocalChecked(),
                 New<v8::String>("MaterialNodeSetInputF failed!").ToLocalChecked()
+            );
+            result->Set(
+                New<v8::String>("debug_str").ToLocalChecked(),
+                New<v8::String>(debug_str).ToLocalChecked()
             );
         } else {
             result->Set(
@@ -2745,7 +2750,7 @@ namespace RadeonRaysNode {
         rpr_material_node in_node = (void *) (long) info[0]->NumberValue();
         rpr_material_node_info in_info = info[1]->Uint32Value();
         size_t in_size = info[2]->Uint32Value();
-        void * in_data = node::Buffer::Data(info[3]->ToObject());
+        void * in_data = NM_54_buf(info[3]);
         size_t out_size;
 
         rpr_int status = rprMaterialNodeGetInfo(in_node, in_info, in_size, in_data, &out_size);
@@ -2764,7 +2769,7 @@ namespace RadeonRaysNode {
         rpr_int in_input_idx = info[1]->Int32Value();
         rpr_material_node_input_info in_info = info[2]->Uint32Value();
         size_t in_size = info[3]->Uint32Value();
-        void * in_data = node::Buffer::Data(info[4]->ToObject());
+        void * in_data = NM_54_buf(info[4]);
         size_t out_size;
 
         rpr_int status = rprMaterialNodeGetInputInfo(in_node, in_input_idx, in_info, in_size, in_data, &out_size);

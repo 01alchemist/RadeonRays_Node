@@ -1,5 +1,4 @@
-const RPR = require("./../src/core/wrapper/radeon-pro-render").default
-const rpr = require("../build/Debug/radeonrays.node")
+const rpr = require("../dist")
 const assert = require("./../src/utils/assert").default
 const fs = require("fs");
 const saveAsPNG = require("./save-as-png")
@@ -15,23 +14,23 @@ const M_PI_4 = 0.7853981633974483; // pi/4
 function simpleRenderTest() {
     let context, matsys, scene;
     console.time("CreateContext");
-    let result = rpr.CreateContext(RPR.RPR_CREATION_FLAGS_ENABLE_GPU0)
+    let result = rpr.CreateContext(rpr.RPR_CREATION_FLAGS_ENABLE_GPU0)
     console.timeEnd("CreateContext");
     console.log(result)
-    if (result.status !== RPR.RPR_SUCCESS) {
+    if (result.status !== rpr.RPR_SUCCESS) {
         return false;
     }
     context = result.context;
 
     result = rpr.ContextCreateMaterialSystem(context, 0);
     console.log(result);
-    if (result.status !== RPR.RPR_SUCCESS) {
+    if (result.status !== rpr.RPR_SUCCESS) {
         return false;
     }
     matsys = result.material_system;
     result = rpr.ContextCreateScene(context);
     console.log(result);
-    if (result.status !== RPR.RPR_SUCCESS) {
+    if (result.status !== rpr.RPR_SUCCESS) {
         return false;
     }
     scene = result.scene;
@@ -165,15 +164,15 @@ function simpleRenderTest() {
 
     //material
     let diffuse
-    result = rpr.MaterialSystemCreateNode(matsys, RPR.RPR_MATERIAL_NODE_DIFFUSE);
+    result = rpr.MaterialSystemCreateNode(matsys, rpr.RPR_MATERIAL_NODE_DIFFUSE);
     console.log(result);
-    if (result.status !== RPR.RPR_SUCCESS) {
+    if (result.status !== rpr.RPR_SUCCESS) {
         return false;
     }
     diffuse = result.node;
     result = rpr.MaterialNodeSetInputF(diffuse, "color", 0.7, 0.7, 0.0, 0.0);
     console.log(result);
-    if (result.status !== RPR.RPR_SUCCESS) {
+    if (result.status !== rpr.RPR_SUCCESS) {
         return false;
     }
 
@@ -184,16 +183,16 @@ function simpleRenderTest() {
     }
     result = rpr.SceneAttachShape(scene, mesh);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 
     result = rpr.ShapeSetMaterial(mesh, diffuse);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 
     let m = matrix.translation([0, 1, 0]);
     result = rpr.ShapeSetTransform(mesh, false, m);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 
     //plane mesh
     result = rpr.ContextCreateMesh(context,
@@ -207,112 +206,112 @@ function simpleRenderTest() {
     let plane_mesh = result.mesh;
     result = rpr.SceneAttachShape(scene, plane_mesh);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.ShapeSetMaterial(plane_mesh, diffuse);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS); 
+    assert(result.status == rpr.RPR_SUCCESS); 
     
     // let dofMesh = createDOFMesh(context);
 
     // result = rpr.SceneAttachShape(scene, dofMesh);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
 
     //camera
     let camera; 
     result = rpr.ContextCreateCamera(context);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     camera = result.camera;
     result = rpr.CameraLookAt(camera, 0, 3, 10, 0, 0, 0, 0, 1, 0);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.CameraSetFocalLength(camera, 23.0);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.CameraSetFStop(camera, 5.4);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.SceneSetCamera(scene, camera);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     //camera 2
     // let camera; 
     // result = rpr.ContextCreateCamera(context);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // camera = result.camera;
     // result = rpr.CameraLookAt(camera, 0.0, +0.6, 4.0, 0.0, +0.6, 0.0, 0.0, 1.0, 0.0);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // result = rpr.CameraSetFocalLength(camera, 200.0);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // result = rpr.CameraSetFStop(camera, 0.5);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // result = rpr.CameraSetFocusDistance(camera, 10.0);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
-    // result = rpr.CameraSetMode(camera, RPR.RPR_CAMERA_MODE_PERSPECTIVE);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // result = rpr.CameraSetMode(camera, rpr.RPR_CAMERA_MODE_PERSPECTIVE);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // result = rpr.SceneSetCamera(scene, camera);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
 
     //spot light
     let spotLight; 
     result = rpr.ContextCreateSpotLight(context);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     spotLight = result.light;
 
     let spotLightm = matrix.mul(
         matrix.translation([0, 16, 0]),
-        matrix.rotation_x(-M_PI_2),
+        matrix.rotation_x(-M_PI_2)
     );
     console.log("  matrix: [ " + spotLightm.join(", ") + " ]");
     result = rpr.LightSetTransform(spotLight, true, spotLightm);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     console.log(M_PI_4, M_PI * 2 / 3);
     result = rpr.SpotLightSetConeShape(spotLight, M_PI_4, M_PI * 2 / 3);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.SpotLightSetRadiantPower3f(spotLight, 350/100, 350/100, 350/100);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.SceneAttachLight(scene, spotLight);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 
     //point light
     // result = rpr.ContextCreatePointLight(context);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // let pointLight = result.light;
     // let pointLightm = mat4.fromTranslation(mat4.create(), [0.0, +0.6, 4.0]);
     // result = rpr.LightSetTransform(pointLight, true, pointLightm);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // result = rpr.PointLightSetRadiantPower3f(pointLight, 1000, 1000, 1000);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
     // result = rpr.SceneAttachLight(scene, pointLight);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
 
     // result = rpr.ContextCreateDirectionalLight(context);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // let lightDir = result.light;
     // result = rpr.SceneAttachLight(scene, lightDir);
-    // assert(result.status == RPR.RPR_SUCCESS);
+    // assert(result.status == rpr.RPR_SUCCESS);
     // console.log(result);
 
     result = rpr.ContextSetScene(context, scene);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 
     //setup out
     let frame_buffer;
@@ -320,7 +319,7 @@ function simpleRenderTest() {
     const fb_height = 600;
     // Frame buffer format
     const num_components = 4;
-    const type = RPR.RPR_COMPONENT_TYPE_FLOAT32;
+    const type = rpr.RPR_COMPONENT_TYPE_FLOAT32;
 
     result = rpr.ContextCreateFrameBuffer(
         context, 
@@ -328,16 +327,16 @@ function simpleRenderTest() {
         fb_width, fb_height
     );
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     frame_buffer = result.frame_buffer;
 
-    result = rpr.ContextSetAOV(context, RPR.RPR_AOV_COLOR, frame_buffer);
-    // result = rpr.ContextSetAOV(context, RPR.RPR_AOV_SHADING_NORMAL, frame_buffer);
+    result = rpr.ContextSetAOV(context, rpr.RPR_AOV_COLOR, frame_buffer);
+    // result = rpr.ContextSetAOV(context, rpr.RPR_AOV_SHADING_NORMAL, frame_buffer);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.FrameBufferClear(frame_buffer);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     const kRenderIterations = 256;
     
     //render
@@ -345,7 +344,7 @@ function simpleRenderTest() {
     for (let i = 0; i < kRenderIterations; ++i)
     {
         result = rpr.ContextRender(context);
-        assert(result.status == RPR.RPR_SUCCESS);
+        assert(result.status == rpr.RPR_SUCCESS);
     }
 
     console.log("Rendering completed!")
@@ -357,7 +356,7 @@ function simpleRenderTest() {
 
     result = rpr.FrameBufferGetInfo(frame_buffer, output1, bufferSize);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 
     fs.writeFileSync(`output/dof.rgba`, output1);
     // saveAsPNG(output1, fb_width, fb_height, "dof");
@@ -365,16 +364,16 @@ function simpleRenderTest() {
     //change spotLight
     result = rpr.SpotLightSetConeShape(spotLight, M_PI_4 * 0.5, M_PI_4 * 0.5);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.FrameBufferClear(frame_buffer);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     
     console.log("Rendering started...")
     for (let i = 0; i < kRenderIterations; ++i)
     {
         result = rpr.ContextRender(context);
-        assert(result.status == RPR.RPR_SUCCESS);
+        assert(result.status == rpr.RPR_SUCCESS);
     }
     console.log("Rendering completed!")
 
@@ -382,45 +381,45 @@ function simpleRenderTest() {
 
     result = rpr.FrameBufferGetInfo(frame_buffer, output2, bufferSize);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     fs.writeFileSync(`output/dof-2.rgba`, output2);
 
     let rs;
     // result = rpr.ContextGetInfo(context, RPR_CONTEXT_RENDER_STATISTICS, sizeof(rpr_render_statistics), NULL);
     result = rpr.ContextGetInfo(context);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 
     return;
     //cleanup
     result = rpr.SceneDetachLight(scene, spotLight);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.ObjectDelete(spotLight); 
     spotLight = null;
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     rpr.ObjectDelete(diffuse);
     console.log(result);
     result = rpr.SceneSetCamera(scene, null);
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.ObjectDelete(scene); 
     scene = null;
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.ObjectDelete(camera); 
     camera = null;
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.ObjectDelete(frame_buffer); 
     frame_buffer = null;
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
     result = rpr.ObjectDelete(matsys); 
     matsys = null;
     console.log(result);
-    assert(result.status == RPR.RPR_SUCCESS);
+    assert(result.status == rpr.RPR_SUCCESS);
 }
 
 function createSphere(context, lat, lon, r, c) {
@@ -506,7 +505,7 @@ function createSphere(context, lat, lon, r, c) {
         indices, 4,
         faces, faces.length);
     console.log(result);
-    if (result.status !== RPR.RPR_SUCCESS) {
+    if (result.status !== rpr.RPR_SUCCESS) {
         console.log("Error creating mesh");
         return false;
     }

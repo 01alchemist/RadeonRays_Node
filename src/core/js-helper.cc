@@ -11,6 +11,16 @@ float const * ToCFloats(v8::Local<v8::Value> v8_value) {
     return *data;
 }
 
+void* NM_54_buf(v8::Local<v8::Value> v8_value) {
+    //node::Buffer::Data(NM_54_buf(info[8]))
+    TypedArrayContents<unsigned int> data(v8_value);
+    return *data;
+}
+
+void* NM_57_buf(v8::Local<v8::Value> v8_value) {
+    return node::Buffer::Data(v8_value->ToObject());
+}
+
 v8::Local<v8::Object> rpr_to_js_render_statistics(rpr_render_statistics data){
     v8::Local<v8::Object> result = New<v8::Object>();
     result->Set(

@@ -2,12 +2,16 @@
     "name": "radeon-rays",
     "version": "1.0.0",
     "description": "Node.js bindings for RadeonRays_SDK",
-    "main": "index.js",
     "repository": "https://github.com/01alchemist/RadeonRays_Node.git",
     "author": "Nidin Vinayakan <01@01alchemist.com>",
     "license": "MIT",
+    "main": "./dist/index.js",
+    "bin": {
+        "radeonrays": "./bin/radeonrays"
+    },
     "scripts": {
-        "build": "node-gyp build && webpack --config webpack.config.js --progress --colors",
+        "build": "node-gyp rebuild && webpack --config webpack.config.js --progress --colors",
+        "build-e": "HOME=~/.electron-gyp node-gyp rebuild --target=1.7.5 --arch=x64 --dist-url=https://atom.io/download/electron && webpack --config webpack.config.js --progress --colors",
         "watch": "webpack --config webpack.config.js --progress --colors --watch",
         "test": "yarn build && node ./node_modules/jest/bin/jest.js --config jest.json",
         "tdd": "node ./node_modules/jest/bin/jest.js --config jest.json --watch",
