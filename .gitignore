@@ -5,3 +5,6 @@ node_modules
 .vscode
 .idea
 tests/output
+.history
+amd
+sdk
