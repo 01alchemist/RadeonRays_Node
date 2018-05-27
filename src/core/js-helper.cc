@@ -12,7 +12,6 @@ float const * ToCFloats(v8::Local<v8::Value> v8_value) {
 }
 
 void* NM_54_buf(v8::Local<v8::Value> v8_value) {
-    //node::Buffer::Data(NM_54_buf(info[8]))
     TypedArrayContents<unsigned int> data(v8_value);
     return *data;
 }

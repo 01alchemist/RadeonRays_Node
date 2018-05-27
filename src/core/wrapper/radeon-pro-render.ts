@@ -980,32 +980,21 @@ export const FR_MAX_AA_GRID_SIZE = 16
 export const FR_FALSE = 0
 export const FR_TRUE = 1
 
-let _consts: any = {}
+let allConsts: any = {}
+export let lookup: any = {}
 
 for (let key in this) {
     if (this.hasOwnProperty(key)) {
-        // let parts = key.split("_")
-        // console.log(parts)
-        // let firstKey = parts.shift()
-        // let nextObj = _consts[firstKey]
-        // nextObj = nextObj === undefined ? {} : nextObj
-        // _consts[firstKey] = nextObj
-        // let parents = []
-        // parts.forEach(part => {
-        //     if (nextObj[part] === undefined) {
-        //         nextObj[part] = {}
-        //     }
-        //     parents.push(nextObj)
-        //     nextObj = nextObj[part]
-        // })
-        // let lastKey = parts[parts.length - 1]
-        // let lastParent = parents[parents.length - 1]
-        _consts[key] = this[key]
-        // lastParent[lastKey] = this[key]
-        // lastParent[this[key]] = key
+        allConsts[key] = this[key]
+        if (lookup[this[key]] === undefined) {
+            lookup[this[key]] = [key];
+        } else {
+            lookup[this[key]].push(key);
+        }
     }
 }
 
 export default {
-    ..._consts,
+    ...allConsts,
+    lookup
 }

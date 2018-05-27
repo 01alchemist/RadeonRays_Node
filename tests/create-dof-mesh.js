@@ -1,5 +1,6 @@
-const RPR = require("./../src/core/wrapper/radeon-pro-render").default
-const rpr = require("../build/Debug/radeonrays.node")
+// const RPR = require("./../src/core/wrapper/radeon-pro-render").default
+// const rpr = require("../build/Debug/radeonrays.node")
+const rpr = require("../dist")
 
 module.exports = function(context) {
     let c = 0.5;
