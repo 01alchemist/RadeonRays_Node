@@ -39,20 +39,21 @@
         ["OS=='win'", {
           "include_dirs":[
             "./amd/RadeonProRender-Baikal",
-            "../amd/RadeonProRender-Baikal/RadeonRays/RadeonRays/include",
+            "./amd/RadeonProRender-Baikal/RadeonRays/RadeonRays/include",
             "C:/Program Files (x86)/Windows Kits/10/Include/10.0.14393.0/ucrt/",
             "<!(node -e \"require('nan')\")"
           ],  
           "link_settings":{
             "libraries":[
-              "../amd/RadeonProRender-Baikal/RadeonRays/RadeonRays/Release/RadeonRays.lib",
-              "../amd/RadeonProRender-Baikal/Baikal/Release/Baikal.lib",
+              "../amd/RadeonProRender-Baikal/RadeonRays/RadeonRays/Release/RadeonRays.lib"
             ]  
           },
           "libraries":[
-            "../amd/RadeonProRender-Baikal/Baikal/Release/Baikal.lib",
+            # "../amd/RadeonProRender-Baikal/Baikal/Release/Baikal.lib",
             "../amd/RadeonProRender-Baikal/RadeonRays/RadeonRays/Release/RadeonRays.lib",
-            "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.14393.0/ucrt/x64/libucrt.lib"
+            "../amd/RadeonProRender-Baikal/Rpr/Release/RadeonProRender.lib",
+            "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.14393.0/ucrt/x64/libucrt.lib",
+            # "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.14393.0/ucrt/x64/libucrtd.lib"
           ],
       	}]
       ],  

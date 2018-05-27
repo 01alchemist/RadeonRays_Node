@@ -1,5 +1,6 @@
-import RPR from "./../src/core/wrapper/radeon-pro-render"
-const rpr = require("../build/Debug/radeonrays.node")
+// import RPR from "./../src/core/wrapper/radeon-pro-render"
+const RPR = require("../dist/index")
+const rpr = require("../build/Release/radeonrays")
 console.time("CreateContext");
 const result1 = rpr.CreateContext(RPR.RPR_CREATION_FLAGS_ENABLE_GPU0)
 console.timeEnd("CreateContext");

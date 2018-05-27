@@ -13,7 +13,9 @@
         "radeonrays": "./bin/radeonrays"
     },
     "scripts": {
-        "build": "node-gyp rebuild && webpack --config webpack.config.js --progress --colors",
+        "build.debug": "node-gyp rebuild --debug && webpack --config webpack.config.js --progress --colors",
+        "build.ts": "webpack --config webpack.config.js --progress --colors",
+        "build": "node-gyp rebuild && yarn build.ts",
         "build-e": "HOME=~/.electron-gyp node-gyp rebuild --target=1.7.5 --arch=x64 --dist-url=https://atom.io/download/electron && webpack --config webpack.config.js --progress --colors",
         "watch": "webpack --config webpack.config.js --progress --colors --watch",
         "test": "yarn build && node ./node_modules/jest/bin/jest.js --config jest.json",

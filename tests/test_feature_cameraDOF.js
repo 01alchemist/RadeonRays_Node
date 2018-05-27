@@ -1,5 +1,5 @@
 const RPR = require("./../src/core/wrapper/radeon-pro-render").default
-const rpr = require("../build/Debug/radeonrays.node")
+const rpr = require("../dist")
 const assert = require("./../src/utils/assert").default
 const fs = require("fs");
 const saveAsPNG = require('./save-as-png');
