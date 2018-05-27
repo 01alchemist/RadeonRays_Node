@@ -18,6 +18,7 @@ function simpleRenderTest() {
     console.timeEnd("CreateContext");
     console.log(result)
     if (result.status !== rpr.RPR_SUCCESS) {
+        console.log(rpr.lookup[result.status])
         return false;
     }
     context = result.context;
@@ -337,10 +338,15 @@ function simpleRenderTest() {
     result = rpr.FrameBufferClear(frame_buffer);
     console.log(result);
     assert(result.status == rpr.RPR_SUCCESS);
-    const kRenderIterations = 256;
+    
+    const bufferSize = fb_width * fb_height * 4 * 4;
+    const BufferType = typeof SharedArrayBuffer === "undefined" ? ArrayBuffer : SharedArrayBuffer;
+    const sbuffer = new BufferType(bufferSize);
+    const output1 = Buffer.from(sbuffer);
     
     //render
     console.log("Rendering started...")
+    const kRenderIterations = 256;
     for (let i = 0; i < kRenderIterations; ++i)
     {
         result = rpr.ContextRender(context);
@@ -348,16 +354,12 @@ function simpleRenderTest() {
     }
 
     console.log("Rendering completed!")
-
-    const bufferSize = fb_width * fb_height * 4 * 4;
-    const BufferType = typeof SharedArrayBuffer === "undefined" ? ArrayBuffer : SharedArrayBuffer;
-    const sbuffer = new BufferType(bufferSize);
-    const output1 = Buffer.from(sbuffer);
+    
 
     result = rpr.FrameBufferGetInfo(frame_buffer, output1, bufferSize);
     console.log(result);
     assert(result.status == rpr.RPR_SUCCESS);
-
+    
     fs.writeFileSync(`output/dof.rgba`, output1);
     // saveAsPNG(output1, fb_width, fb_height, "dof");
     return;
